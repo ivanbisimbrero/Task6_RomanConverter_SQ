@@ -18,7 +18,7 @@ test("Boundary Conditions and Invalid Inputs", function(assert) {
   assert.propEqual(convertIntegerToRoman(-14), {value: 0, message: 'Please enter a valid integer', result: false}, "TC-14");
   assert.propEqual(convertIntegerToRoman("X"), {value: 0, message: 'Please enter a valid integer', result: false}, "TC-15");
   assert.propEqual(convertIntegerToRoman(122.51), {value: 0, message: 'Please enter a valid integer', result: false}, "TC-16");
-  //assert.propEqual(convertIntegerToRoman(undefined), {value: 0, message: 'Please enter a valid integer', result: false}, "TC-17");
+  assert.propEqual(convertIntegerToRoman(undefined), {value: 0, message: 'Please enter a valid integer', result: false}, "TC-17");
   assert.propEqual(convertIntegerToRoman(null), {value: 0, message: 'Please enter a valid integer', result: false}, "TC-18");
   /*
   I have moved the null test case here instead of in convertRomanToInteger because it makes more sense to do it with an integer 
