@@ -159,15 +159,23 @@ var convertIntegerToRoman = function(num) {
   return response;
 };
 
+function repeatString(str, count) {
+  var repeated = '';
+  for (var i = 0; i < count; i++) {
+    repeated += str;
+  }
+  return repeated;
+}
+
 function lessThan9(num, obj) {
   if (num === 9) {
     return obj[1] + obj[10];
   } else if (num >= 5 && num < 9) {
-    return obj[5] + obj[1].repeat(num % 5);
+    return obj[5] + repeatString(obj[1], num % 5);
   } else if (num === 4) {
     return obj[1] + obj[5];
   } else {
-    return obj[1].repeat(num);
+    return repeatString(obj[1], num);
   }
 };
 
@@ -176,27 +184,27 @@ function greaterThan9(num, obj) {
     if (num === 40) {
       return obj[10] + obj[50];
     } else {
-      return obj[10].repeat(parseInt(num / 10));
+      return repeatString(obj[10], parseInt(num / 10));
     }
   } else if (num >= 50 && num < 100) {
     if (num === 90) {
       return obj[10] + obj[100];
     } else {
-      return obj[50] + obj[10].repeat(parseInt((num - 50) / 10));
+      return obj[50] + repeatString(obj[10], parseInt((num - 50) / 10));
     }
   } else if (num >= 100 && num < 500) {
     if (num === 400) {
       return obj[100] + obj[500];
     } else {
-      return obj[100].repeat(parseInt(num / 100));
+      return repeatString(obj[100], parseInt(num / 100));
     }
   } else if (num >= 500 && num < 1000) {
     if (num === 900) {
       return obj[100] + obj[1000];
     } else {
-      return obj[500] + obj[100].repeat(parseInt(num - 500) / 100);
+      return obj[500] + repeatString(obj[100], parseInt(num - 500) / 100);
     }
   } else if (num >= 1000) {
-    return obj[1000].repeat(parseInt(num / 1000));
+    return repeatString(obj[1000], parseInt(num / 1000));
   }
 };
