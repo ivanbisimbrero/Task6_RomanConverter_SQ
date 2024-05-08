@@ -3,8 +3,43 @@ var INVALID_ROMAN = "Please enter a valid roman";
 var INVALID_INTEGER = "Please enter a valid integer";
 var OUT_OF_RANGE = "Out of range (1-3999)";
 
+// Utility function to repeat strings
+function repeatString(str, count) {
+  var repeated = '';
+  for (var i = 0; i < count; i++) {
+    repeated += str;
+  }
+  return repeated;
+}
+
+function lessThan9(num, mapping) {
+  if (num === 9) {
+    return mapping[1] + mapping[10];
+  } else if (num >= 5 && num < 9) {
+    return mapping[5] + repeatString(mapping[1], num % 5);
+  } else if (num === 4) {
+    return mapping[1] + mapping[5];
+  } else {
+    return repeatString(mapping[1], num);
+  }
+}
+
+function greaterThan9(num, mapping) {
+  if (num >= 10 && num < 50) {
+    return num === 40 ? mapping[10] + mapping[50] : repeatString(mapping[10], parseInt(num / 10));
+  } else if (num >= 50 && num < 100) {
+    return num === 90 ? mapping[10] + mapping[100] : mapping[50] + repeatString(mapping[10], parseInt((num - 50) / 10));
+  } else if (num >= 100 && num < 500) {
+    return num === 400 ? mapping[100] + mapping[500] : repeatString(mapping[100], parseInt(num / 100));
+  } else if (num >= 500 && num < 1000) {
+    return num === 900 ? mapping[100] + mapping[1000] : mapping[500] + repeatString(mapping[100], parseInt(num - 500) / 100);
+  } else if (num >= 1000) {
+    return repeatString(mapping[1000], parseInt(num / 1000));
+  }
+}
+
+// Init and event handlers are defined at the top level
 function init() {
-  // Load elements once to avoid repetition on every invocation
   var modeCheckbox = document.querySelector("input[type='checkbox']");
   var header = document.querySelector("h1");
   var convertButton = document.querySelector(".convert-button");
@@ -19,7 +54,6 @@ function init() {
     return integerToRoman ? "Integer To Roman" : "Roman To Integer";
   }
 
-  // Now, the conversion operation does only perform the operation.
   convertButton.addEventListener("click", function() {
     var inputValue = inputArea.value;
     var conversion = modeCheckbox.checked ? convertIntegerToRoman(inputValue) : convertRomanToInteger(inputValue);
@@ -31,6 +65,7 @@ function init() {
   });
 }
 
+// Conversion functions
 var convertRomanToInteger = function(roman) {
   var response = {
     value: 0, 
@@ -130,36 +165,5 @@ var convertIntegerToRoman = function(num) {
   return response;
 };
 
-function lessThan9(num, mapping) {
-  if (num === 9) {
-    return mapping[1] + mapping[10];
-  } else if (num >= 5 && num < 9) {
-    return mapping[5] + repeatString(mapping[1], num % 5);
-  } else if (num === 4) {
-    return mapping[1] + mapping[5];
-  } else {
-    return repeatString(mapping[1], num);
-  }
-}
-
-function greaterThan9(num, mapping) {
-  if (num >= 10 && num < 50) {
-    return num === 40 ? mapping[10] + mapping[50] : repeatString(mapping[10], parseInt(num / 10));
-  } else if (num >= 50 && num < 100) {
-    return num === 90 ? mapping[10] + mapping[100] : mapping[50] + repeatString(mapping[10], parseInt((num - 50) / 10));
-  } else if (num >= 100 && num < 500) {
-    return num === 400 ? mapping[100] + mapping[500] : repeatString(mapping[100], parseInt(num / 100));
-  } else if (num >= 500 && num < 1000) {
-    return num === 900 ? mapping[100] + mapping[1000] : mapping[500] + repeatString(mapping[100], parseInt(num - 500) / 100);
-  } else if (num >= 1000) {
-    return repeatString(mapping[1000], parseInt(num / 1000));
-  }
-}
-
-function repeatString(str, count) {
-  var repeated = '';
-  for (var i = 0; i < count; i++) {
-    repeated += str;
-  }
-  return repeated;
-}
+// Expose init function globally if it's being used in HTML
+window.init = init;
