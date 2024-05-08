@@ -3,43 +3,9 @@ var INVALID_ROMAN = "Please enter a valid roman";
 var INVALID_INTEGER = "Please enter a valid integer";
 var OUT_OF_RANGE = "Out of range (1-3999)";
 
-// Utility function to repeat strings
-function repeatString(str, count) {
-  var repeated = '';
-  for (var i = 0; i < count; i++) {
-    repeated += str;
-  }
-  return repeated;
-}
-
-function lessThan9(num, mapping) {
-  if (num === 9) {
-    return mapping[1] + mapping[10];
-  } else if (num >= 5 && num < 9) {
-    return mapping[5] + repeatString(mapping[1], num % 5);
-  } else if (num === 4) {
-    return mapping[1] + mapping[5];
-  } else {
-    return repeatString(mapping[1], num);
-  }
-}
-
-function greaterThan9(num, mapping) {
-  if (num >= 10 && num < 50) {
-    return num === 40 ? mapping[10] + mapping[50] : repeatString(mapping[10], parseInt(num / 10));
-  } else if (num >= 50 && num < 100) {
-    return num === 90 ? mapping[10] + mapping[100] : mapping[50] + repeatString(mapping[10], parseInt((num - 50) / 10));
-  } else if (num >= 100 && num < 500) {
-    return num === 400 ? mapping[100] + mapping[500] : repeatString(mapping[100], parseInt(num / 100));
-  } else if (num >= 500 && num < 1000) {
-    return num === 900 ? mapping[100] + mapping[1000] : mapping[500] + repeatString(mapping[100], parseInt(num - 500) / 100);
-  } else if (num >= 1000) {
-    return repeatString(mapping[1000], parseInt(num / 1000));
-  }
-}
-
-// Init and event handlers are defined at the top level
-function init() {
+function init() { 
+  
+  // Load elements once to avoid repetition on every invocation
   var modeCheckbox = document.querySelector("input[type='checkbox']");
   var header = document.querySelector("h1");
   var convertButton = document.querySelector(".convert-button");
@@ -54,6 +20,12 @@ function init() {
     return integerToRoman ? "Integer To Roman" : "Roman To Integer";
   }
 
+  // Now, the convertion operation does only perform the operation.
+  // Things we have extracted to this listener:
+  // 1 - Read the UI inputs (inputArea.value)
+  // 2 - Write the UI output (outputArea.innerHTML)
+  // 3 - Show error messages
+  // This is cleaner and also removes code duplications
   convertButton.addEventListener("click", function() {
     var inputValue = inputArea.value;
     var conversion = modeCheckbox.checked ? convertIntegerToRoman(inputValue) : convertRomanToInteger(inputValue);
@@ -63,29 +35,39 @@ function init() {
       alert(conversion.message);
     }
   });
-}
 
-// Conversion functions
+};
+
+// Now the convertion methods receive both an input argument instead
+// of reading directly from the UI.
+// On top of that, they return a JSON object instead of updating the
+// UI directly. The JSON object contains the result (ok/nok), the value
+// and an error message if needed
 var convertRomanToInteger = function(roman) {
+
   var response = {
     value: 0, 
     message: '',
     result: false 
-  };
+  }
 
+  // Regexp to check if a string is a valid roman number
   var romanNumeralRegex = new RegExp(
     /^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/
   );
 
+  // Convert the string to uppercase so we just to handle uppercase strings
   roman = roman.toUpperCase();
   var regexResult = romanNumeralRegex.test(roman);
 
+  // Either the string is not a valid roman number or is empty
   if (!regexResult || roman.length <= 0) {
     response.message = INVALID_ROMAN;
     return response;
   }
 
   var arr = ["I", "V", "X", "L", "C", "D", "M"];
+
   var values = {
     I: 1,
     V: 5,
@@ -93,10 +75,11 @@ var convertRomanToInteger = function(roman) {
     L: 50,
     C: 100,
     D: 500,
-    M: 1000
+    M: 1000,
   };
 
   var sum = 0;
+
   var prevIndex = 0;
 
   for (var i = roman.length - 1; i >= 0; i--) {
@@ -105,6 +88,7 @@ var convertRomanToInteger = function(roman) {
     } else {
       sum -= values[roman[i]];
     }
+
     prevIndex = arr.indexOf(roman[i]);
   }
 
@@ -114,21 +98,31 @@ var convertRomanToInteger = function(roman) {
   return response;
 };
 
+// Now the convertion methods receive both an input argument instead
+// of reading directly from the UI.
+// On top of that, they return a JSON object instead of updating the
+// UI directly. The JSON object contains the result (ok/nok), the value
+// and an error message if needed
 var convertIntegerToRoman = function(num) {
+
   var response = {
-    value: '',
+    value: 0,
     message: '', 
     result: false 
-  };
+  }
 
+  // Regexp to check the input is a valid integer
   var numberRegex = new RegExp(/^\d+$/);
+
   var regexResult = numberRegex.test(num);
 
+  // Not an integer -> we exit with the appropriate message
   if (!regexResult) {
     response.message = INVALID_INTEGER;
     return response;
   }
 
+  // Integer not in the supported range -> exit with the right message
   if (Number(num) > 3999 || Number(num) < 1) {
     response.message = OUT_OF_RANGE;
     return response;   
@@ -141,7 +135,7 @@ var convertIntegerToRoman = function(num) {
     50: "L",
     100: "C",
     500: "D",
-    1000: "M"
+    1000: "M",
   };
 
   var count = 1;
@@ -150,7 +144,7 @@ var convertIntegerToRoman = function(num) {
     var last = parseInt(num % 10);
     last *= count;
     if (last < 10) {
-      str = lessThan9(last, mapping) + str;
+      str += lessThan9(last, mapping);
     } else {
       str = greaterThan9(last, mapping) + str;
     }
@@ -165,5 +159,52 @@ var convertIntegerToRoman = function(num) {
   return response;
 };
 
-// Expose init function globally if it's being used in HTML
-window.init = init;
+function repeatString(str, count) {
+  var repeated = '';
+  for (var i = 0; i < count; i++) {
+    repeated += str;
+  }
+  return repeated;
+}
+
+function lessThan9(num, obj) {
+  if (num === 9) {
+    return obj[1] + obj[10];
+  } else if (num >= 5 && num < 9) {
+    return obj[5] + repeatString(obj[1], num % 5);
+  } else if (num === 4) {
+    return obj[1] + obj[5];
+  } else {
+    return repeatString(obj[1], num);
+  }
+};
+
+function greaterThan9(num, obj) {
+  if (num >= 10 && num < 50) {
+    if (num === 40) {
+      return obj[10] + obj[50];
+    } else {
+      return repeatString(obj[10], parseInt(num / 10));
+    }
+  } else if (num >= 50 && num < 100) {
+    if (num === 90) {
+      return obj[10] + obj[100];
+    } else {
+      return obj[50] + repeatString(obj[10], parseInt((num - 50) / 10));
+    }
+  } else if (num >= 100 && num < 500) {
+    if (num === 400) {
+      return obj[100] + obj[500];
+    } else {
+      return repeatString(obj[100], parseInt(num / 100));
+    }
+  } else if (num >= 500 && num < 1000) {
+    if (num === 900) {
+      return obj[100] + obj[1000];
+    } else {
+      return obj[500] + repeatString(obj[100], parseInt(num - 500) / 100);
+    }
+  } else if (num >= 1000) {
+    return repeatString(obj[1000], parseInt(num / 1000));
+  }
+};
