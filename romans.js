@@ -1,64 +1,65 @@
 // Constants for the literals
-var INVALID_ROMAN = "Please enter a valid roman";
-var INVALID_INTEGER = "Please enter a valid integer";
-var OUT_OF_RANGE = "Out of range (1-3999)";
+const INVALID_ROMAN = 'Please enter a valid roman';
+const INVALID_INTEGER = 'Please enter a valid integer';
+const OUT_OF_RANGE = 'Out of range (1-3999)';
 
 function init() { 
   
   // Load elements once to avoid repetition on every invocation
-  var modeCheckbox = document.querySelector("input[type='checkbox']");
-  var header = document.querySelector("h1");
-  var convertButton = document.querySelector(".convert-button");
-  var outputArea = document.querySelector(".convert-output");
-  var inputArea = document.querySelector("input[type='text']");
+  var modeCheckbox = document.querySelector('input[type=\'checkbox\']');
+  var header = document.querySelector('h1');
+  var convertButton = document.querySelector('.convert-button');
+  var outputArea = document.querySelector('.convert-output');
+  var inputArea = document.querySelector('input[type=\'text\']');
 
-  modeCheckbox.addEventListener("change", function(e) {
+
+  modeCheckbox.addEventListener('change', function(e) {
     header.innerHTML = getModeTitle(e.target.checked);
   });
 
-  function getModeTitle(integerToRoman) {
-    return integerToRoman ? "Integer To Roman" : "Roman To Integer";
-  }
+  const getModeTitle = function(integerToRoman) {
+    return integerToRoman ? 'Integer To Roman' : 'Roman To Integer';
+  };
 
-  // Now, the convertion operation does only perform the operation.
-  // Things we have extracted to this listener:
+  // Now, the convertion operation does only perform the operation. 
+  // Things we have extracted to this listener: 
   // 1 - Read the UI inputs (inputArea.value)
   // 2 - Write the UI output (outputArea.innerHTML)
   // 3 - Show error messages
   // This is cleaner and also removes code duplications
-  convertButton.addEventListener("click", function() {
+  convertButton.addEventListener('click', function() {
     var inputValue = inputArea.value;
-    var conversion = modeCheckbox.checked ? convertIntegerToRoman(inputValue) : convertRomanToInteger(inputValue);
-    if (conversion.result) {
-      outputArea.innerHTML = conversion.value;
+    var convertion = modeCheckbox.checked ? convertIntegerToRoman(inputValue) : convertRomanToInteger(inputValue);
+    if (convertion.result) {
+      outputArea.innerHTML = convertion.value;
     } else {
-      alert(conversion.message);
+      alert(convertion.message);
     }
   });
 
-};
+}
 
 // Now the convertion methods receive both an input argument instead
 // of reading directly from the UI.
 // On top of that, they return a JSON object instead of updating the
 // UI directly. The JSON object contains the result (ok/nok), the value
 // and an error message if needed
-var convertRomanToInteger = function(roman) {
+const convertRomanToInteger = function(roman) {
 
   var response = {
     value: 0, 
     message: '',
     result: false 
-  }
+  };
 
   // Regexp to check if a string is a valid roman number
-  var romanNumeralRegex = new RegExp(
+  const romanNumeralRegex = new RegExp(
     /^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/
   );
 
   // Convert the string to uppercase so we just to handle uppercase strings
   roman = roman.toUpperCase();
-  var regexResult = romanNumeralRegex.test(roman);
+  const regexResult = romanNumeralRegex.test(roman);
 
   // Either the string is not a valid roman number or is empty
   if (!regexResult || roman.length <= 0) {
@@ -66,7 +67,7 @@ var convertRomanToInteger = function(roman) {
     return response;
   }
 
-  var arr = ["I", "V", "X", "L", "C", "D", "M"];
+  var arr = ['I', 'V', 'X', 'L', 'C', 'D', 'M'];
 
   var values = {
     I: 1,
@@ -84,9 +85,9 @@ var convertRomanToInteger = function(roman) {
 
   for (var i = roman.length - 1; i >= 0; i--) {
     if (arr.indexOf(roman[i]) >= prevIndex) {
-      sum += values[roman[i]];
+      sum = sum + values[roman[i]];
     } else {
-      sum -= values[roman[i]];
+      sum = sum - values[roman[i]];
     }
 
     prevIndex = arr.indexOf(roman[i]);
@@ -103,18 +104,18 @@ var convertRomanToInteger = function(roman) {
 // On top of that, they return a JSON object instead of updating the
 // UI directly. The JSON object contains the result (ok/nok), the value
 // and an error message if needed
-var convertIntegerToRoman = function(num) {
+const convertIntegerToRoman = function(num) {
 
   var response = {
     value: 0,
     message: '', 
     result: false 
-  }
+  };
 
   // Regexp to check the input is a valid integer
-  var numberRegex = new RegExp(/^\d+$/);
+  const numberRegex = new RegExp(/^\d+$/);
 
-  var regexResult = numberRegex.test(num);
+  const regexResult = numberRegex.test(num);
 
   // Not an integer -> we exit with the appropriate message
   if (!regexResult) {
@@ -128,18 +129,18 @@ var convertIntegerToRoman = function(num) {
     return response;   
   }
 
-  var mapping = {
-    1: "I",
-    5: "V",
-    10: "X",
-    50: "L",
-    100: "C",
-    500: "D",
-    1000: "M",
+  const mapping = {
+    1: 'I',
+    5: 'V',
+    10: 'X',
+    50: 'L',
+    100: 'C',
+    500: 'D',
+    1000: 'M',
   };
 
   var count = 1;
-  var str = "";
+  var str = '';
   while (num > 0) {
     var last = parseInt(num % 10);
     last *= count;
@@ -159,52 +160,107 @@ var convertIntegerToRoman = function(num) {
   return response;
 };
 
-function repeatString(str, count) {
-  var repeated = '';
-  for (var i = 0; i < count; i++) {
-    repeated += str;
-  }
-  return repeated;
-}
-
-function lessThan9(num, obj) {
+const lessThan9 = function(num, obj) {
   if (num === 9) {
     return obj[1] + obj[10];
   } else if (num >= 5 && num < 9) {
-    return obj[5] + repeatString(obj[1], num % 5);
+    return obj[5] + obj[1].repeat(num % 5);
   } else if (num === 4) {
     return obj[1] + obj[5];
   } else {
-    return repeatString(obj[1], num);
+    return obj[1].repeat(num);
   }
 };
 
-function greaterThan9(num, obj) {
+const greaterThan9 = function(num, obj) {
   if (num >= 10 && num < 50) {
+    if (num === 10) {
+      return obj[10];
+    }
+
     if (num === 40) {
       return obj[10] + obj[50];
     } else {
-      return repeatString(obj[10], parseInt(num / 10));
+      return obj[10].repeat(parseInt(num / 10));
     }
   } else if (num >= 50 && num < 100) {
+    if (num === 50) {
+      return obj[50];
+    }
+
     if (num === 90) {
       return obj[10] + obj[100];
     } else {
-      return obj[50] + repeatString(obj[10], parseInt((num - 50) / 10));
+      return obj[50] + obj[10].repeat(parseInt((num - 50) / 10));
     }
   } else if (num >= 100 && num < 500) {
+    if (num === 100) {
+      return obj[100];
+    }
+
     if (num === 400) {
       return obj[100] + obj[500];
     } else {
-      return repeatString(obj[100], parseInt(num / 100));
+      return obj[100].repeat(parseInt(num / 100));
     }
   } else if (num >= 500 && num < 1000) {
+    if (num === 500) {
+      return obj[500];
+    }
+
     if (num === 900) {
       return obj[100] + obj[1000];
     } else {
-      return obj[500] + repeatString(obj[100], parseInt(num - 500) / 100);
+      return obj[500] + obj[100].repeat(parseInt(num - 500) / 100);
     }
-  } else if (num >= 1000) {
-    return repeatString(obj[1000], parseInt(num / 1000));
+  } else if (num >= 1000 && num < 5000) {
+    if (num === 1000) {
+      return obj[1000];
+    }
+    return obj[1000].repeat(parseInt(num / 1000));
   }
 };
+
+if (!String.prototype.repeat) {
+  String.prototype.repeat = function(count) {
+    'use strict';
+    if (this == null) {
+      throw new TypeError('can\'t convert ' + this + ' to object');
+    }
+    var str = '' + this;
+    count = +count;
+    if (count != count) {
+      count = 0;
+    }
+    if (count < 0) {
+      throw new RangeError('repeat count must be non-negative');
+    }
+    if (count == Infinity) {
+      throw new RangeError('repeat count must be less than infinity');
+    }
+    count = Math.floor(count);
+    if (str.length == 0 || count == 0) {
+      return '';
+    }
+    // Ensuring count is a 31-bit integer allows us to heavily optimize the
+    // main part. But anyway, most current (August 2014) browsers can't handle
+    // strings 1 << 28 chars or longer, so:
+    if (str.length * count >= 1 << 28) {
+      throw new RangeError('repeat count must not overflow maximum string size');
+    }
+    var rpt = '';
+    for (;;) {
+      if ((count & 1) == 1) {
+        rpt += str;
+      }
+      count >>>= 1;
+      if (count == 0) {
+        break;
+      }
+      str += str;
+    }
+    // Could we try:
+    // return Array(count + 1).join(this);
+    return rpt;
+  };
+}
