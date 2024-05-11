@@ -3,8 +3,8 @@ const INVALID_ROMAN = 'Please enter a valid roman';
 const INVALID_INTEGER = 'Please enter a valid integer';
 const OUT_OF_RANGE = 'Out of range (1-3999)';
 
-function init() { 
-  
+function init() {
+
   // Load elements once to avoid repetition on every invocation
   var modeCheckbox = document.querySelector('input[type=\'checkbox\']');
   var header = document.querySelector('h1');
@@ -21,8 +21,8 @@ function init() {
     return integerToRoman ? 'Integer To Roman' : 'Roman To Integer';
   };
 
-  // Now, the convertion operation does only perform the operation. 
-  // Things we have extracted to this listener: 
+  // Now, the convertion operation does only perform the operation.
+  // Things we have extracted to this listener:
   // 1 - Read the UI inputs (inputArea.value)
   // 2 - Write the UI output (outputArea.innerHTML)
   // 3 - Show error messages
@@ -47,9 +47,9 @@ function init() {
 const convertRomanToInteger = function(roman) {
 
   var response = {
-    value: 0, 
+    value: 0,
     message: '',
-    result: false 
+    result: false
   };
 
   // Regexp to check if a string is a valid roman number
@@ -108,8 +108,8 @@ const convertIntegerToRoman = function(num) {
 
   var response = {
     value: 0,
-    message: '', 
-    result: false 
+    message: '',
+    result: false
   };
 
   // Regexp to check the input is a valid integer
@@ -126,7 +126,7 @@ const convertIntegerToRoman = function(num) {
   // Integer not in the supported range -> exit with the right message
   if (Number(num) > 3999 || Number(num) < 1) {
     response.message = OUT_OF_RANGE;
-    return response;   
+    return response;
   }
 
   const mapping = {
