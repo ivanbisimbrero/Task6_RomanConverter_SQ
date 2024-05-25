@@ -24,22 +24,9 @@
             'mode': e.target.checked ? 'Integer to Roman' : 'Roman to Integer'
           });
         });
-
-        //When the conversion button is clicked.
-        convertButton.addEventListener('click', function() {
-          gtag('event', 'conversion', {
-            'conversionType': modeCheckbox.checked ? 'Integer to Roman' : 'Roman to Integer',
-          });
-        });
-
-        //The input values entered by users.
-        inputArea.addEventListener('input', function() {
-          gtag('event', 'input', {
-            'inputValue': inputArea.value
-          });
-        });
       });
-
+      
+      //When the conversion button is clicked.
       function checkValueAndConversionType() {
         var modeCheckbox = document.querySelector('input[type="checkbox"]');
         var inputArea = document.querySelector('input[type="text"]');
