@@ -3,14 +3,6 @@ const INVALID_ROMAN = 'Please enter a valid roman';
 const INVALID_INTEGER = 'Please enter a valid integer';
 const OUT_OF_RANGE = 'Out of range (1-3999)';
 
-// I've defined this function in order track the events
-function trackEvent(eventCategory, eventAction, eventLabel) {
-  gtag('event', eventAction, {
-    'event_category': eventCategory,
-    'event_label': eventLabel
-  });
-}
-
 function init() {
 
   // Load elements once to avoid repetition on every invocation
@@ -23,8 +15,6 @@ function init() {
 
   modeCheckbox.addEventListener('change', function(e) {
     header.innerHTML = getModeTitle(e.target.checked);
-    //When users switch between conversion modes.
-    trackEvent('Mode Change', 'Toggle Mode', e.target.checked ? 'Integer to Roman' : 'Roman to Integer');
   });
 
   const getModeTitle = function(integerToRoman) {
@@ -45,15 +35,7 @@ function init() {
     } else {
       alert(convertion.message);
     }
-    //When the conversion button is clicked.
-    trackEvent('Conversion', 'Convert', modeCheckbox.checked ? 'Integer to Roman' : 'Roman to Integer');
   });
-
-  inputArea.addEventListener('input', function() {
-    //The input values entered by users.
-    trackEvent('Input', 'User Input', inputArea.value);
-  });
-
 }
 
 // Now the convertion methods receive both an input argument instead
