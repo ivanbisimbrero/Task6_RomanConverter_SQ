@@ -15,8 +15,7 @@
       //I have defined this function to track the desired events 
       function trackEvent(eventCategory, eventAction, eventLabel) {
         gtag('event', eventAction, {
-          'event_category': eventCategory,
-          'event_label': eventLabel
+          eventCategory: eventAction
         });
       }
       
@@ -28,7 +27,7 @@
 
         //When users switch between conversion modes.
         modeCheckbox.addEventListener('change', function(e) {
-          trackEvent('Mode Change', 'Toggle Mode', e.target.checked ? 'Integer to Roman' : 'Roman to Integer');
+          trackEvent('Mode_Change', 'Toggle Mode', e.target.checked ? 'Integer to Roman' : 'Roman to Integer');
         });
 
         //When the conversion button is clicked.
