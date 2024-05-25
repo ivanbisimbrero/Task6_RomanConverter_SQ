@@ -39,6 +39,15 @@
           });
         });
       });
+
+      function checkValueAndConversionType() {
+        var modeCheckbox = document.querySelector('input[type="checkbox"]');
+        var inputArea = document.querySelector('input[type="text"]');
+        gtag('event', 'conversion', {
+          'conversionType': modeCheckbox.checked ? 'Integer to Roman' : 'Roman to Integer',
+          'inputValue': inputArea.value
+        });
+      }
       
     </script>
     <link rel="stylesheet" href="romans.css">
@@ -54,7 +63,7 @@
         <div class="group">
           <input type="text" name="conversion-input" />
         </div>
-        <span class="convert-button">Convert</span>
+        <span class="convert-button" onclick="javascript:checkValueAndConversionType()">Convert</span>
         <p class="convert-output"></p>
       </section>
     </main>
