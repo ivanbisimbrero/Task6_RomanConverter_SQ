@@ -12,13 +12,6 @@
     <script src="romans.js"></script>
     <script>
       
-      //I have defined this function to track the desired events 
-      function trackEvent(eventCategory, eventAction, eventLabel) {
-        gtag('event', eventAction, {
-          eventCategory: eventAction
-        });
-      }
-      
       // Event listeners for tracking
       document.addEventListener('DOMContentLoaded', function() {
         var modeCheckbox = document.querySelector('input[type="checkbox"]');
@@ -27,17 +20,25 @@
 
         //When users switch between conversion modes.
         modeCheckbox.addEventListener('change', function(e) {
-          trackEvent('Mode_Change', 'Toggle Mode', e.target.checked ? 'Integer to Roman' : 'Roman to Integer');
+          gtag('event', 'mode_change', {
+            'mode': e.target.checked ? 'Integer to Roman' : 'Roman to Integer'
+          });
         });
 
         //When the conversion button is clicked.
         convertButton.addEventListener('click', function() {
-          trackEvent('Conversion', 'Convert', modeCheckbox.checked ? 'Integer to Roman' : 'Roman to Integer');
+          gtag('event', 'conversion', {
+            'conversionType': modeCheckbox.checked ? 'Integer to Roman' : 'Roman to Integer',
+            'inputValue': inputValue,
+            'result': result
+          });
         });
 
         //The input values entered by users.
         inputArea.addEventListener('input', function() {
-          trackEvent('Input', 'User Input', inputArea.value);
+          gtag('event', 'input', {
+            'inputValue': inputArea.value
+          });
         });
       });
       
